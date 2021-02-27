@@ -1,0 +1,51 @@
+@import '../../design-tokens/scss_variables.scss';
+
+.commentContainer {
+    display: flex;
+    align-items: center;
+    margin-top: $space-medium;
+    .imgContainer {
+        height: auto;
+        width: 40px;
+        margin-right: $space-medium;
+        img {
+            width: 100%;
+        }
+    }
+    .textContainer {
+        width: calc(100% - 56px);
+        display: flex;
+        flex-direction: column;
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: $space-small;
+            .userName {
+                margin-right: $space-medium;
+                color: blue;
+            }
+            .time {
+                margin-left: $space-medium;
+            }
+        }
+        .text {
+            
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 4px;
+            .like {
+                fill: cornflowerblue;
+                width: 15px;
+                height: 15px;
+                margin-right: 4px;
+            }
+            .edit {
+                margin-right: $space-medium;
+                color: cornflowerblue;
+            }
+        }
+    }
+}

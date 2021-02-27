@@ -1,0 +1,25 @@
+@import '../../design-tokens/scss_variables.scss';
+
+.PostComment_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    &--img {
+        height: auto;
+        width: 40px;
+        margin-right: $space-medium;
+    }
+    &--box {
+        width: calc(100% - 56px);
+        display: flex;
+        textarea {
+            width: 100%;
+            padding: $space-small;
+        }
+    }
+}
+.buttonCOntainer {
+    margin-top: $space-small;
+    display: flex;
+    justify-content: flex-end;
+}

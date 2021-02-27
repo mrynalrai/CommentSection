@@ -1,0 +1,35 @@
+@import '../../design-tokens/scss_variables.scss';
+
+.Layout {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+main {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 360px) {
+    .Layout {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 767) {
+    .Layout {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .Layout {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 1200) {
+    .Layout {
+        width: 60%;
+    }
+}

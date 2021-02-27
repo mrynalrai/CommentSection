@@ -1,0 +1,13 @@
+@import '../../design-tokens/scss_variables.scss';
+
+.PostComment {
+    padding: $space-medium;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.dropdown_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
