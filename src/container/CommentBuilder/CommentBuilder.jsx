@@ -27,7 +27,7 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
         window.localStorage.setItem('comments', JSON.stringify(data));
     }
     
-    const addNewComment = (textVal, parentId) => {
+    const addNewComment = (textVal, userName, parentId) => {
         if (!textVal || !textVal.trim()) {
             console.log('Please enter something');
             return;
@@ -36,6 +36,7 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
             id: uniqid(),
             createdTs: new Date(),
             updatedTs: null,
+            addressee: userName,
             text: textVal,
             userId: user.userId,
             userName: user.userName,
@@ -216,7 +217,13 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
                       likeComment ={likeComment}
                       addNewComment={addNewComment}
                       user={user}
-                      >{comment.text}</Comment>
+                      >
+                          {
+                              comment.addressee && (
+                                  <span style={{fontWeight: 'bold'}}>{comment.addressee}&nbsp;</span>
+                              )
+                          }
+                          {comment.text}</Comment>
                    );   
             })}
         </div>

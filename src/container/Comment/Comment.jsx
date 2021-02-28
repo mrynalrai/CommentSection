@@ -18,7 +18,7 @@ const Comment = ({ data, children, updateComment, likeComment, removeComment, us
 
     const addComment = (txt) => {
         setIsReply(false);
-        addNewComment(txt, data.id);
+        addNewComment(txt,data.userName, data.id);
     }
     const edit = () => {
         setIsEdit(true);
@@ -51,6 +51,11 @@ const Comment = ({ data, children, updateComment, likeComment, removeComment, us
                             !isEdit ?
                             <>
                                 <div className={classes['text']}>
+                                {
+                                    data.addressee && (
+                                        <span style={{fontWeight: 'bold'}}>{data.addressee}&nbsp;</span>
+                                    )
+                                }
                                     {data.text}
                                 </div>
                                 <div className={classes['actions']}>
