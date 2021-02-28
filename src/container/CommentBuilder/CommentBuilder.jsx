@@ -27,9 +27,8 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
         window.localStorage.setItem('comments', JSON.stringify(data));
     }
     
-    const addNewComment = () => {
-        let textEl = document.getElementById("commentBox").value;
-        if (!textEl || !textEl.trim()) {
+    const addNewComment = (textVal, parentId) => {
+        if (!textVal || !textVal.trim()) {
             console.log('Please enter something');
             return;
         }
@@ -37,20 +36,43 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
             id: uniqid(),
             createdTs: new Date(),
             updatedTs: null,
-            text: textEl,
+            text: textVal,
             userId: user.userId,
             userName: user.userName,
-            likes: 0,
-            parent: null,
+            likes: [],
+            parent: parentId,
             avatar: user.avatar,
             children: []
         }
 
+        //on first entry
         if(!data) {
             updateStoreLocal([comment]);
         } else {
-            data.push(comment);
-            updateStoreLocal(data);
+            if (!parentId) {
+                data.push(comment);
+                updateStoreLocal(data);
+            } else {
+                data = data.map((el) => {
+                    if (el.id === parentId) {
+                        el.children.push(comment);
+                    } 
+                    else if(el.children.length > 0) {
+                        let isPresent = false;
+                        el.children = el.children.map((childEl) => {
+                            if (childEl.id === parentId) {
+                                isPresent = true;
+                            }
+                            return childEl;
+                        })
+                        if (isPresent) {
+                            el.children.push(comment);
+                        }
+                    }
+                    return el;
+                });
+                updateStoreLocal(data);
+            }
         }
         document.getElementById("commentBox").value = '';
     }
@@ -60,7 +82,20 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
      * @param {Number} id 
      */
     const removeComment = (id) => {
-        data = data.filter(el => el.id !== id);
+        data = data.filter(el => {
+            if (el.id === id) {
+                return false;
+            } else if (el.children.length > 0) {
+                el.children = el.children.filter(childEl => {
+                    if (childEl.id === id) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                })
+            }
+            return true;
+        });
         updateStoreLocal(data);
     }
 
@@ -69,25 +104,44 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
             if(el.id === id) {
                 el.text = text;
                 el.updatedTs = new Date();
+            } else if (el.children.length > 0) {
+                el.children.map(childEl => {
+                    if (childEl.id === id) {
+                        childEl.text = text;
+                        el.updatedTs = new Date();
+                    }
+                    return childEl;
+                })
             }
             return el;
         })
         updateStoreLocal(data);
     }
 
-    const likeComment = (id) => {
+    const likeComment = (id, userId) => {
         data = data.map(el => {
             if(el.id === id) {
-                el.likes++;
+                if (el.likes.indexOf(userId) === -1){
+                    el.likes.push(userId);
+                } else {
+                    el.likes = el.likes.filter(likeId => likeId !== userId);
+                }
+            } else if (el.children.length > 0) {
+                el.children = el.children.map((childEl) => {
+                    if (childEl.id === id) {
+                        if (childEl.likes.indexOf(userId) === -1) {
+                            childEl.likes.push(userId);
+                        } else {
+                            childEl.likes = childEl.likes.filter(likeId => likeId !== userId);
+                        }
+                    } 
+                    return childEl;
+                });
+                updateStoreLocal(data);
             }
             return el;
         })
         updateStoreLocal(data);
-    }
-
-    //TODO: Implement reply comment
-    const replyComment = (id, text) => {
-        
     }
 
     /**
@@ -98,7 +152,7 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
             case 'likes':
                 if(data){
                     let temp = data;
-                    temp.sort((a,b) => a.likes - b.likes);
+                    temp.sort((a,b) => a.likes.length - b.likes.length);
                     setSortedData([...temp]);
                 }
                 break;
@@ -146,14 +200,22 @@ const CommentBuilder = ({ user, data, updateData, updateUser }) => {
                 </select>
             </div>
             {sortedData &&  sortedData.map((comment, i) => {
+                let isLiked;
+                if(comment.likes && comment.likes.indexOf(user.userId) === -1 ){
+                    isLiked = false;
+                } else {
+                    isLiked = true;
+                }
                 return(
                     <Comment 
                       key={i} 
                       data={comment}
+                      isLiked={isLiked}
                       removeComment ={removeComment} 
                       updateComment ={updateComment}
                       likeComment ={likeComment}
-                      replyComment ={replyComment}
+                      addNewComment={addNewComment}
+                      user={user}
                       >{comment.text}</Comment>
                    );   
             })}

@@ -27,5 +27,6 @@ It correctly bundles React in production mode and optimizes the build for the be
     - Liking a comment
     - Editing a comment (the user can delete only his comment)
     - Deleting a comment (the user can delete only his comment)
+    - Reply on existing comment
 
 4. Application is hosted at https://commentsection.netlify.app/
