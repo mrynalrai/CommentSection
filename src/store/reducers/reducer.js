@@ -3,14 +3,6 @@ const initialState = {
         userId: 'mrynalrai',
         userName: 'Mrinal Rai',
         avatar: 'profile'
-
-        // userId: 'cr7',
-        // userName: 'Cristiano Ronaldo',
-        // avatar: 'man'
-
-        // userId: 'lm10',
-        // userName: 'Lionel Messi',
-        // avatar: 'beard'
     },
     data: null
   }

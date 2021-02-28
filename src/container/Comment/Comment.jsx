@@ -47,9 +47,13 @@ const Comment = ({ data, children, updateComment, likeComment, removeComment, us
                             <div className={classes['actions']}>
                                 <Like className={classes['like']} onClick={()=>likeComment(data.id)}/>
                                 <span style={{marginRight: 16}}>{data.likes}</span>
-                                <div className={classes['edit']} onClick={edit}>
-                                    Edit
-                                </div>
+                                {
+                                    data.userId === user.userId ?
+                                    <div className={classes['edit']} onClick={edit}>
+                                        Edit
+                                    </div>
+                                    :null
+                                }
                                 {
                                     data.userId === user.userId ?
                                     <div className={classes['edit']} onClick={()=>removeComment(data.id)}>

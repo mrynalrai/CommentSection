@@ -4,8 +4,9 @@ import Comment from '../Comment/Comment';
 import uniqid from 'uniqid';
 import PostComment from '../../component/PostComment/PostComment';
 import { useEffect, useState } from 'react';
+import { USERS } from '../../constants';
 
-const CommentBuilder = ({ user, data, updateData }) => {
+const CommentBuilder = ({ user, data, updateData, updateUser }) => {
 
     const [ sortedData, setSortedData] = useState(data);
 
@@ -14,6 +15,7 @@ const CommentBuilder = ({ user, data, updateData }) => {
      */
     useEffect(() => {
         doSort();
+        switchUser();
     }, [data]);
 
     /**
@@ -104,7 +106,7 @@ const CommentBuilder = ({ user, data, updateData }) => {
                 if (data) {
                     let temp = data;
                     temp.sort((a,b) => {
-                        if (new Date(a.createdTs) > new Date(b.createdTs))
+                        if (new Date(a.createdTs) < new Date(b.createdTs))
                             return -1
                         else {
                             return 1;
@@ -116,8 +118,25 @@ const CommentBuilder = ({ user, data, updateData }) => {
         }
     };
 
+    const switchUser = () => {
+        const selectedUser = document.getElementById("selectUser").value;
+        if (selectedUser) {
+            let userData = USERS[selectedUser];
+            updateUser(userData);
+        }
+    }
+
     return(
         <div className={classes["PostComment"]}>
+            <div className={classes['userContainer']}>
+                <label htmlFor="selectUser" style={{marginRight: 8}}>Current user:</label>
+
+                <select name="selectUser" id="selectUser" onChange={switchUser}>
+                    <option value="mrynalrai">Mrinal Rai</option>
+                    <option value="cr7">Cristiano Ronaldo</option>
+                    <option value="lm10">Lionel Messi</option>
+                </select>
+            </div>
             <PostComment user={user} addNewComment={addNewComment}/>      
             <div className={classes['dropdown_container']}>
                 <label htmlFor="sortType" style={{marginRight: 8}}>Sort by:</label>
@@ -151,7 +170,8 @@ const mapStateTopProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      updateData: (data) => dispatch({type: 'dataUpdated', payload: data})
+      updateData: (data) => dispatch({type: 'dataUpdated', payload: data}),
+      updateUser: (data) => dispatch({type: 'userUpdated', payload: data})
     }
   }
 
